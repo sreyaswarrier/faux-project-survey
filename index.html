@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F1 Valentine's Day</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Formula1';
+      src: url('fonts/Formula1-Bold.ttf') format('truetype');
+      font-weight: bold;
+    }
+
+   body {
+  font-family: 'Formula1', sans-serif;
+  background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+  color: white;
+  overflow: hidden;
+  position: relative;
+}
+
+
+    /* Heart Floating Animation */
+    @keyframes flutter {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  50% { transform: translateY(-50px) rotate(10deg); opacity: 0.8; }
+  100% { transform: translateY(-100px) rotate(-10deg); opacity: 0; }
+}
+
+.heart-bg::before, 
+.heart-bg::after {
+  content: "❤";
+  font-size: 20px;
+  color: rgba(255, 0, 76, 0.6);
+  position: absolute;
+  animation: flutter 4s linear infinite;
+}
+
+.heart-bg::before {
+  left: 20%;
+  top: 40%;
+  animation-duration: 3s;
+}
+
+.heart-bg::after {
+  right: 20%;
+  top: 60%;
+  animation-duration: 5s;
+}
+    #valentineQuestion {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-align: center;
+      text-shadow: 0 0 10px #FF1E00;
+      background: linear-gradient(90deg, #FF1E00, #d40000);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .f1-button {
+      font-size: 20px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* YES Button */
+    #yesButton {
+  background-color: #FF1E00;
+  color: white;
+  border: 2px solid #FF1E00;
+  box-shadow: 0px 0px 20px rgba(255, 30, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+
+    #yesButton:hover {
+      background-color: white;
+      color: #FF1E00;
+    }
+
+    /* NO Button */
+    #noButton {
+      background-color: #15151E;
+      color: white;
+      border: 2px solid white;
+      box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.7);
+    }
+
+    #noButton:hover {
+      background-color: white;
+      color: #15151E;
+    }
+
+
+#imageDisplay[src="leclerc.gif"] {
+  object-fit: cover;
+  object-position: center top;
+  height: 500px; /* Adjust as needed */
+  width: auto;
+  clip-path: inset(16% 0 16% 0); /* Crops 10% from the top */
+}
+
+
+  </style>
+</head>
+<body class="flex items-center justify-center h-screen relative">
+  <!-- Floating Hearts -->
+  <div id="heartContainer"></div>
+
+  <div class="flex flex-col items-center p-4">
+    <img id="imageDisplay" src="leclerc.gif" alt="Cute kitten with flowers" class="rounded-md h-[500px]" style="object-fit: cover;" />
+    <h2 id="valentineQuestion" class="text-4xl my-3">WILL YOU BE MY VALENTINE?</h2>
+    <div class="flex gap-4 pt-[20px] items-center" id="responseButtons">
+      <button id="yesButton" class="f1-button bounce2">Yes</button>
+      <button id="noButton" class="f1-button">No</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+    
+    const yesButton = document.getElementById('yesButton');
+    const noButton = document.getElementById('noButton');
+    const imageDisplay = document.getElementById('imageDisplay');
+    const valentineQuestion = document.getElementById('valentineQuestion');
+    const responseButtons = document.getElementById('responseButtons');
+    const heartContainer = document.getElementById('heartContainer');
+
+    let noClickCount = 0;
+    let buttonHeight = 48;
+    let buttonWidth = 80;
+    let fontSize = 20;
+    const imagePaths = [
+      "leclerc.gif", "maxsure.jpg", "landosad.jpg",
+      "carlosad.jpg", "lewisad.jpg", "danielsad.jpg", "podiumceleb.jpg"
+    ];
+
+    // NO Button Click Logic
+    noButton.addEventListener('click', function() {
+      if (noClickCount < 5) {
+        noClickCount++;
+        imageDisplay.src = imagePaths[noClickCount];
+        buttonHeight += 35;
+        buttonWidth += 35;
+        fontSize += 25;
+        yesButton.style.height = `${buttonHeight}px`;
+        yesButton.style.width = `${buttonWidth}px`;
+        yesButton.style.fontSize = `${fontSize}px`;
+        if (noClickCount < 6) {
+          noButton.textContent = ["No", "Are you sure?🫥", "Pookie please..<3", "Don't do this to me😓", "You're breaking my heart💔💔", "I'm gonna cry..."][noClickCount];
+        }
+      }
+    });
+
+    // YES Button Click Logic
+    yesButton.addEventListener('click', () => {
+      imageDisplay.src = 'podiumceleb.jpg'; 
+      valentineQuestion.textContent = "Yayyy!! :3"; 
+      responseButtons.style.display = 'none'; 
+      
+      // Heart confetti effect
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          let heart = document.createElement('div');
+          heart.className = 'heart';
+          heart.style.left = `${Math.random() * 100}vw`;
+          heart.style.animationDuration = `${2 + Math.random() * 3}s`;
+
+          // Use an actual heart SVG
+          heart.innerHTML = `<svg viewBox="0 0 24 24" fill="#FF1E00" width="24" height="24">
+                              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>`;
+          
+          heartContainer.appendChild(heart);
+          
+          setTimeout(() => {
+            heart.remove();
+          }, 5000);
+        }, i * 200);
+      }
+
+      // Fire confetti
+      confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.7 },
+        colors: ['#FF1E00', '#FF4F00', '#FFD700']
+      });
+    });
+
+  </script>  
+</body>
+</html>
